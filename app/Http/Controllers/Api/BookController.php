@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BookResource;
 use Illuminate\Http\Request;
 use App\Models\Book;
 
@@ -14,7 +15,9 @@ class BookController extends Controller
     public function index()
     {
         //
-        return \App\Models\Book::all();
+        // return \App\Models\Book::all();
+        // return BookResource::collection(Book::all());
+        return BookResource::collection(Book::with('user')->get());
     }
 
     /**
@@ -40,7 +43,8 @@ class BookController extends Controller
         $book->user_id = 1; // Assuming you have user authentication
         $book->save();
 
-        return response()->json($book, 201);
+        // return response()->json($book, 201);
+        return new BookResource($book);
     }
 
     /**
@@ -49,7 +53,8 @@ class BookController extends Controller
     public function show(\App\Models\Book $book)
     {
         //
-        return $book;
+        $book->load('user', 'attendees');
+        return new BookResource($book);
     }
     //
 
@@ -76,7 +81,8 @@ class BookController extends Controller
         $book->description = $request->input('description');
 
         $book->update();
-        return response()->json($book, 200);
+        // return response()->json($book, 200);
+        return new BookResource($book);
     }
 
     /**

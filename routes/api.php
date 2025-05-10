@@ -11,4 +11,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 Route::apiResource('books', BookController::class);
 Route::apiResource('books.attendees', AttendeeController::class)
-    ->scoped(['attendee' => 'book']);
+    ->scoped();
